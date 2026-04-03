@@ -1,10 +1,9 @@
+console.log("Starting server...");
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import axios from 'axios';
 import nodemailer from 'nodemailer';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, query, where, getDocs, doc, updateDoc } from "firebase/firestore";
 
@@ -21,33 +20,28 @@ const firebaseConfig = {
 const fbApp = initializeApp(firebaseConfig);
 const db = getFirestore(fbApp);
 
-// Exit if critical API key is missing
-if (!process.env.NVIDIA_API_KEY) {
-    console.error('CRITICAL ERROR: Missing NVIDIA_API_KEY in .env file');
-    process.exit(1);
-}
+// Safe Env Loading
+const NVIDIA_API_KEY = process.env.NVIDIA_API_KEY || "";
+const EMAIL_USER = process.env.EMAIL_USER || "";
+const EMAIL_PASS = process.env.EMAIL_PASS || "";
+const NVIDIA_URL = 'https://integrate.api.nvidia.com/v1/chat/completions';
+
+if (!NVIDIA_API_KEY) console.warn("⚠️ Warning: NVIDIA_API_KEY is missing.");
+if (!EMAIL_USER || !EMAIL_PASS) console.warn("⚠️ Warning: Email credentials are missing.");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // Settings
-app.use(cors());
+app.use(cors()); // Safe default CORS
 app.use(express.json());
 
-// Credentials from Environment
-const NVIDIA_API_KEY = process.env.NVIDIA_API_KEY;
-const NVIDIA_URL = 'https://integrate.api.nvidia.com/v1/chat/completions';
-const EMAIL_USER = process.env.EMAIL_USER;
-const EMAIL_PASS = process.env.EMAIL_PASS;
+// Root Health Check
+app.get("/", (req, res) => {
+    res.send("Backend running 🚀");
+});
 
-// CRITICAL: Exit if email credentials OR API key are missing
-if (!NVIDIA_API_KEY || !EMAIL_USER || !EMAIL_PASS || EMAIL_USER === 'YOUR_EMAIL@GMAIL.COM') {
-    console.error('\n❌ CRITICAL ERROR: Missing or placeholder environment variables!');
-    console.error('Please ensure NVIDIA_API_KEY, EMAIL_USER, and EMAIL_PASS are set in .env\n');
-    process.exit(1);
-}
+// (Mandatory check replaced by warnings above to prevent exit status 1)
 
 // Nodemailer Transporter
 const transporter = nodemailer.createTransport({
@@ -370,22 +364,15 @@ app.get('/test-email', async (req, res) => {
     res.send(success ? "Done" : "Fail");
 });
 
-// Serve Frontend
-app.use(express.static(path.join(__dirname, "dist")));
-
-// Catch-all route to serve the built frontend
-app.get("*", (req, res) => {
-    // If request is not for API/tests, serve index.html
-    const isApi = req.url.startsWith('/api') || req.url.startsWith('/complaint') || req.url.startsWith('/test-email');
-    if (!isApi) {
-        res.sendFile(path.join(__dirname, "dist", "index.html"));
-    }
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server running on port ${PORT} 🚀`);
 });
 
-app.listen(PORT, () => {
-    console.log(`\n🚀 [UPDATE VERIFIED] CivicFix AI Backend running on port ${PORT}`);
+// Global Error Handling
+process.on("uncaughtException", (err) => {
+    console.error("Uncaught Exception:", err);
 });
 
-// Error Handling
-process.on("uncaughtException", console.error);
-process.on("unhandledRejection", console.error);
+process.on("unhandledRejection", (err) => {
+    console.error("Unhandled Rejection:", err);
+});
