@@ -38,7 +38,6 @@ app.use(cors({
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true
 }));
-app.options("(.*)", cors()); // Handle Preflight Requests (Express 5 fix)
 app.use(express.json());
 
 // Root Health Check
