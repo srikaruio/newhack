@@ -34,8 +34,7 @@ const PORT = process.env.PORT || 3000;
 
 // Settings
 app.use(cors({
-    origin: "https://newhack-two.vercel.app",
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    origin: true,
     credentials: true
 }));
 app.use(express.json());
