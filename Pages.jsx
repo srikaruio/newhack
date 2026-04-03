@@ -108,14 +108,27 @@ function PageShell({ user, children, title, subtitle }) {
         @keyframes fadeUp   { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
         ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+        /* Mobile Optimization Classes */
+        .mobile-shell { padding: 0 20px 60px !important; }
+        .mobile-header { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; padding: 16px 0 !important; overflow-x: hidden !important; }
+        .mobile-nav { width: 100% !important; overflow-x: auto !important; padding: 8px 0 !important; display: flex !important; gap: 4px !important; }
+        .mobile-hide { display: none !important; }
+        .mobile-container { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
+        .mobile-full-width { width: 100% !important; }
+
+        @media (max-width: 768px) {
+          .mobile-header { position: relative !important; }
+          .mobile-hide-tablet { display: none !important; }
+        }
       `}</style>
 
       {/* Simplified Background UI */}
       <div style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0, background: "radial-gradient(circle at 0% 0%, rgba(59,130,246,0.05), transparent 50%), radial-gradient(circle at 100% 100%, rgba(99,102,241,0.05), transparent 50%)" }} />
 
-      <div style={{ position: "relative", zIndex: 1, maxWidth: 1360, margin: "0 auto", padding: "0 28px 60px" }}>
+      <div className="mobile-shell" style={{ position: "relative", zIndex: 1, maxWidth: 1360, margin: "0 auto", padding: "0 28px 60px" }}>
         {/* ── HEADER ── */}
-        <div style={{
+        <div className="mobile-header" style={{
           display: "flex", alignItems: "center", justifyContent: "space-between",
           padding: "22px 0 20px",
           borderBottom: "1px solid rgba(255,255,255,0.06)",
@@ -143,7 +156,7 @@ function PageShell({ user, children, title, subtitle }) {
             </div>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+          <div className="mobile-nav" style={{ display: "flex", alignItems: "center", gap: 4 }}>
             {navItems.map(({ to, label, icon }) => {
               const active = loc.pathname === to;
               return (
@@ -157,7 +170,8 @@ function PageShell({ user, children, title, subtitle }) {
                     fontSize: 13, fontWeight: active ? 600 : 400,
                     transition: "all 0.2s"
                   }}>
-                    <span style={{ fontSize: 10 }}>{icon}</span> {label}
+                    <span style={{ fontSize: 10 }}>{icon}</span>
+                    <span className="mobile-hide">{label}</span>
                   </div>
                 </Link>
               );
@@ -219,7 +233,7 @@ function ComplaintDetail({ complaint, onBack }) {
       <button onClick={onBack} style={{ background: "none", border: "none", color: "#60a5fa", cursor: "pointer", marginBottom: 20 }}>← Back to stream</button>
       <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 20, padding: 32 }}>
         <div style={{ fontSize: 18, color: "#fff", marginBottom: 24, lineHeight: 1.5 }}>{complaint.description}</div>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 32 }}>
+        <div className="mobile-stat-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 32 }}>
           {[
             { l: "Complaint ID", v: complaint.complaint_id || "N/A" },
             { l: "Status", v: complaint.status },
@@ -287,7 +301,7 @@ export function AdminPage({ user }) {
                 <div style={{ color: "#fff", fontWeight: 700 }}>{c.description}</div>
                 <StatusBadge status={c.status} />
               </div>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 12, marginBottom: 16, color: "rgba(255,255,255,0.5)", fontSize: 11 }}>
+              <div className="mobile-stat-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr 1fr", gap: 12, marginBottom: 16, color: "rgba(255,255,255,0.5)", fontSize: 11 }}>
                 <div><span style={{ fontSize: 9 }}>TRACKING ID:</span> <span style={{ color: "#818cf8", fontWeight: 700 }}>{c.complaint_id || "N/A"}</span></div>
                 <div><span style={{ fontSize: 9 }}>USER:</span> {c.user_email}</div>
                 <div><span style={{ fontSize: 9 }}>DEPT:</span> {c.department}</div>
@@ -331,7 +345,7 @@ export function PendingPage({ user }) {
               <div key={c.id} onClick={() => setSelected(c)} style={{ 
                 background: c.status === "OVERDUE" ? "rgba(255,77,77,0.03)" : "rgba(255,255,255,0.01)", 
                 border: `1px solid ${c.status === "OVERDUE" ? "rgba(255,77,77,0.15)" : "rgba(255,255,255,0.06)"}`, 
-                borderRadius: 16, padding: 22, cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center",
+                borderRadius: 16, padding: "16px 20px", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12,
                 transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
                 animation: `fadeUp 0.4s ease both ${i * 0.05}s`
               }}
@@ -372,7 +386,7 @@ export function HistoryPage({ user }) {
               <div style={{ padding: 40, border: "2px dashed rgba(255,255,255,0.05)", borderRadius: 16, color: "rgba(160,175,210,0.3)", textAlign: "center", fontSize: 13, fontFamily: "'IBM Plex Mono',monospace" }}>NO COMPLAINTS YET. INITIALIZE YOUR FIRST REPORT FROM THE DASHBOARD.</div>
             ) : complaints.map((c, i) => (
               <div key={c.id} onClick={() => setSelected(c)} style={{ 
-                background: "rgba(255,255,255,0.01)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: 22, cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center",
+                background: "rgba(255,255,255,0.01)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "16px 20px", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12,
                 transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
                 animation: `fadeUp 0.4s ease both ${i * 0.05}s`
               }}
