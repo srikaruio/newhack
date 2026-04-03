@@ -492,6 +492,10 @@ export default function App({ user }) {
         })
       });
 
+      if (!response.ok) {
+        throw new Error("API failed to process the request.");
+      }
+
       const data = await response.json();
       
       // Map API response to Issue object format

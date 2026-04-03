@@ -33,7 +33,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Settings
-app.use(cors()); // Safe default CORS
+app.use(cors({ origin: "*" })); // Safe default CORS for linking
 app.use(express.json());
 
 // Root Health Check
