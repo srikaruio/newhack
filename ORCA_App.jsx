@@ -410,7 +410,7 @@ function AppNav({ loc }) {
               onMouseLeave={e => { if (!active) { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "rgba(160,175,210,0.5)"; }}}
             >
               <span style={{ fontSize: 10 }}>{icon}</span>
-              <span className="mobile-hide">{label}</span>
+              {label}
             </div>
           </Link>
         );
@@ -563,30 +563,9 @@ export default function App({ user }) {
         @keyframes bgFloat2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(20px,-15px)} }
         @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
         @keyframes pulse2 { 0%,100%{opacity:1} 50%{opacity:0.5} }
-        @keyframes spin { to { transform: rotate(360deg); } }
         textarea:focus { outline: none; }
         textarea { resize: none; }
         button:active { transform: scale(0.97) !important; }
-
-        /* Mobile Optimization Classes */
-        .mobile-shell { padding: 0 20px 60px !important; }
-        .mobile-header { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; padding: 16px 0 !important; }
-        .mobile-nav { width: 100% !important; overflow-x: auto !important; padding: 8px 0 !important; }
-        .mobile-profile { width: 100% !important; border-left: none !important; margin-left: 0 !important; padding-left: 0 !important; border-top: 1px solid rgba(255,255,255,0.06) !important; padding-top: 12px !important; }
-        .mobile-stat-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 12px !important; }
-        .mobile-main-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
-        .mobile-input-panel { position: relative !important; top: 0 !important; order: 1 !important; }
-        .mobile-cards-area { order: 2 !important; }
-        .mobile-hide { display: none !important; }
-        .mobile-full-width { width: 100% !important; }
-        .mobile-text-sm { font-size: 11px !important; }
-        .mobile-text-xs { font-size: 10px !important; }
-
-        @media (max-width: 768px) {
-          .mobile-header { position: relative !important; }
-          .mobile-stat-grid { grid-template-columns: 1fr !important; }
-          .mobile-priority-header { flex-direction: column !important; align-items: flex-start !important; gap: 8px !important; }
-        }
       `}</style>
 
       {/* ── BACKGROUND MESH ── */}
@@ -633,10 +612,10 @@ export default function App({ user }) {
       </div>
 
       {/* ── SHELL ── */}
-      <div className="mobile-shell" style={{ position: "relative", zIndex: 1, maxWidth: 1360, margin: "0 auto", padding: "0 28px 60px" }}>
+      <div style={{ position: "relative", zIndex: 1, maxWidth: 1360, margin: "0 auto", padding: "0 28px 60px" }}>
 
         {/* ── HEADER ── */}
-        <div className="mobile-header" style={{
+        <div style={{
           display: "flex", alignItems: "center", justifyContent: "space-between",
           padding: "22px 0 20px",
           borderBottom: "1px solid rgba(255,255,255,0.06)",
@@ -664,7 +643,7 @@ export default function App({ user }) {
           </div>
 
           {/* ── NAV ── */}
-          <div className="mobile-nav"><AppNav loc={loc} /></div>
+          <AppNav loc={loc} />
 
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
 
@@ -691,7 +670,7 @@ export default function App({ user }) {
             </div>
 
             {/* ── USER PROFILE ── */}
-            <div className="mobile-profile" style={{ display: "flex", alignItems: "center", gap: 10, paddingLeft: 4, borderLeft: "1px solid rgba(255,255,255,0.07)", marginLeft: 4 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, paddingLeft: 4, borderLeft: "1px solid rgba(255,255,255,0.07)", marginLeft: 4 }}>
               <div style={{
                 width: 32, height: 32, borderRadius: "50%",
                 background: "linear-gradient(135deg,#1d4ed8,#818cf8)",
@@ -713,7 +692,7 @@ export default function App({ user }) {
 
         {/* ── PRIORITY HERO ── */}
         <div style={{ marginBottom: 36, animation: "fadeUp 0.6s ease both" }}>
-          <div className="mobile-priority-header" style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
             <div style={{ width: 3, height: 16, background: "linear-gradient(180deg,#3b82f6,#818cf8)", borderRadius: 4 }} />
             <span style={{ fontSize: 10, letterSpacing: "2.5px", textTransform: "uppercase", color: "rgba(160,175,210,0.5)", fontFamily: "'IBM Plex Mono',monospace" }}>Live Priority Ranking</span>
             {issues.length > 0 && (
@@ -741,7 +720,7 @@ export default function App({ user }) {
 
         {/* ── STAT ROW ── */}
         {issues.length > 0 && (
-          <div className="mobile-stat-grid" style={{
+          <div style={{
             display: "grid",
             gridTemplateColumns: "repeat(4, 1fr)",
             gap: 20,
@@ -756,10 +735,10 @@ export default function App({ user }) {
         )}
 
         {/* ── MAIN GRID ── */}
-        <div className="mobile-main-grid" style={{ display: "grid", gridTemplateColumns: "340px 1fr", gap: 24, alignItems: "start" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "340px 1fr", gap: 24, alignItems: "start" }}>
 
           {/* ── INPUT PANEL ── */}
-          <div className="mobile-input-panel" style={{
+          <div style={{
             background: "rgba(255,255,255,0.03)", backdropFilter: "blur(20px)",
             border: "1px solid rgba(255,255,255,0.07)",
             borderRadius: 20, padding: 24,
@@ -914,31 +893,31 @@ export default function App({ user }) {
             </div>
           </div>
 
-        {/* ── CARDS AREA ── */}
-        <div className="mobile-cards-area">
-          {loading && <SkeletonCard />}
+          {/* ── CARDS AREA ── */}
+          <div>
+            {loading && <SkeletonCard />}
 
-          {!loading && issues.length === 0 && (
-            <div style={{
-              display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-              padding: "80px 40px", color: "rgba(160,175,210,0.25)", textAlign: "center",
-              border: "1px dashed rgba(255,255,255,0.05)", borderRadius: 20,
-              background: "rgba(255,255,255,0.01)",
-            }}>
-              <div style={{ fontSize: 40, marginBottom: 16, opacity: 0.2 }}>◈</div>
-              <div style={{ fontSize: 16, fontWeight: 600, color: "rgba(160,175,210,0.3)", marginBottom: 8 }}>No risk assessments yet</div>
-              <div style={{ fontSize: 13, color: "rgba(160,175,210,0.2)" }}>Add an issue to begin AI-powered analysis</div>
-            </div>
-          )}
+            {!loading && issues.length === 0 && (
+              <div style={{
+                display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+                padding: "80px 40px", color: "rgba(160,175,210,0.25)", textAlign: "center",
+                border: "1px dashed rgba(255,255,255,0.05)", borderRadius: 20,
+                background: "rgba(255,255,255,0.01)",
+              }}>
+                <div style={{ fontSize: 40, marginBottom: 16, opacity: 0.2 }}>◈</div>
+                <div style={{ fontSize: 16, fontWeight: 600, color: "rgba(160,175,210,0.3)", marginBottom: 8 }}>No risk assessments yet</div>
+                <div style={{ fontSize: 13, color: "rgba(160,175,210,0.2)" }}>Add an issue to begin AI-powered analysis</div>
+              </div>
+            )}
 
-          {!loading && issues.length > 0 && (
-            <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-              {sorted.map((issue, i) => (
-                <IssueCard key={issue.id} issue={issue} index={i} />
-              ))}
-            </div>
-          )}
-        </div>
+            {!loading && issues.length > 0 && (
+              <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+                {sorted.map((issue, i) => (
+                  <IssueCard key={issue.id} issue={issue} index={i} />
+                ))}
+              </div>
+            )}
+          </div>
 
         </div>
       </div>
