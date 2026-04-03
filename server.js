@@ -3,6 +3,8 @@ import express from 'express';
 import cors from 'cors';
 import axios from 'axios';
 import nodemailer from 'nodemailer';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, query, where, getDocs, doc, updateDoc } from "firebase/firestore";
 
@@ -26,7 +28,9 @@ if (!process.env.NVIDIA_API_KEY) {
 }
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Settings
 app.use(cors());
@@ -366,6 +370,22 @@ app.get('/test-email', async (req, res) => {
     res.send(success ? "Done" : "Fail");
 });
 
-app.listen(PORT, () => {
-    console.log(`\n🚀 [UPDATE VERIFIED] CivicFix AI Backend running on http://localhost:${PORT}`);
+// Serve Frontend
+app.use(express.static(path.join(__dirname, "dist")));
+
+// Catch-all route to serve the built frontend
+app.get("*", (req, res) => {
+    // If request is not for API/tests, serve index.html
+    const isApi = req.url.startsWith('/api') || req.url.startsWith('/complaint') || req.url.startsWith('/test-email');
+    if (!isApi) {
+        res.sendFile(path.join(__dirname, "dist", "index.html"));
+    }
 });
+
+app.listen(PORT, () => {
+    console.log(`\n🚀 [UPDATE VERIFIED] CivicFix AI Backend running on port ${PORT}`);
+});
+
+// Error Handling
+process.on("uncaughtException", console.error);
+process.on("unhandledRejection", console.error);
