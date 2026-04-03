@@ -33,7 +33,12 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Settings
-app.use(cors({ origin: "*" })); // Safe default CORS for linking
+app.use(cors({
+    origin: "https://newhack-two.vercel.app",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true
+}));
+app.options("*", cors()); // Handle Preflight Requests
 app.use(express.json());
 
 // Root Health Check
